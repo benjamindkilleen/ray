@@ -101,6 +101,9 @@ class JsonWriter(OutputWriter):
 def _to_jsonable(v, compress: bool) -> Any:
     if compress and compression_supported():
         return str(pack(v))
+    elif isinstance(v, dict):
+        for k, v_ in v.items():
+            v[k] = _to_jsonable(v_, compress=compress)
     elif isinstance(v, np.ndarray):
         return v.tolist()
     return v
